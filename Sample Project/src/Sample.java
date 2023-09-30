@@ -1,7 +1,12 @@
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -24,13 +29,15 @@ public class Sample extends javax.swing.JFrame {
     }
 
     DbCon con = new DbCon();
+    
+    
 
     PreparedStatement ps;
     ResultSet rs;
-    String sql = "insert into info(name,phonenumber)values (?,?)";
+    String sql = "insert into info(name,phonenumber,gender,date,hobby)values (?,?,?,?,?,)";
 
-    String[] columns = {"ID", "Name", "Phone Numbe"};
-
+    String[] columns = {"ID", "Name", "Phone Numbe","Gender","Date","Hobby"};
+// create Method
     public void info() {
 
         DefaultTableModel model = new DefaultTableModel();
@@ -49,8 +56,13 @@ public class Sample extends javax.swing.JFrame {
                 int id = rs.getInt("idinfo");
                 String name = rs.getString("name");
                 int phonenumber = rs.getInt("phonenumber");
+                String gender = rs.getString("gender");
+//                String hobby = rs.getString("hobby");
+//                String subject = rs.getString("subject");
+                String date = rs.getString("date");
+                String hobby = rs.getString("hobby");
 
-                model.addRow(new Object[]{id, name, phonenumber});
+                model.addRow(new Object[]{id, name, phonenumber,gender,date});
 
             }
             rs.close();
@@ -62,6 +74,79 @@ public class Sample extends javax.swing.JFrame {
         }
 
     }
+    // Create method Gender
+    public String getGenders(){
+        String gender="";
+        if (maleRadioButton.isSelected()) {
+            gender= "Male";
+        }
+        else if(feMaleRadioButton.isSelected()){
+            gender= "Female";
+        
+        }
+        
+        return gender;
+
+    }
+    
+    // Date format method
+    // convert to util date to sql date
+    public static Date convertDateToUtilsql(java.util.Date utilDate){
+    
+        if (utilDate != null) {
+            
+            return new Date (utilDate.getTime());
+        }
+    
+    return null;
+    }
+    
+    // Date method String to utill
+    
+    public java.util.Date convertStringToDate(String dateString){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-DD");
+        try {
+            return dateFormat.parse(dateString);
+            
+            
+        } catch (ParseException ex) {
+            System.out.println("Paring failed"+ex);
+            Logger.getLogger(Sample.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    public List<String> getHobby(){
+        List<String> hobbyList = new ArrayList<>();
+        if (checkCodig.isSelected()) {
+            hobbyList.add("Coding");  
+        }
+        if (checkGaming.isSelected()) {
+            hobbyList.add("Gmaing");  
+        }
+        return hobbyList;
+    }
+    
+//    public String getHobby(){
+//        
+//        List hobby = new ArrayList();
+//        
+//        if (checkPrograming.isSelected()) {
+//            hobby.add("Programing");
+//        }
+//        if (checkTraveling.isSelected()) {
+//            hobby.add("Traveling");
+//        }
+//        if (checkWrinting.isSelected()) {
+//            hobby.add("Wrinting");
+//        }
+//        
+//        
+//   
+//    
+//    return hobby;
+//    }
+//    
+    
 
     /**
      * Creates new form Sample
@@ -75,12 +160,17 @@ public class Sample extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         txtIdinfo = new javax.swing.JTextField();
         txtNameInfo = new javax.swing.JTextField();
@@ -91,6 +181,12 @@ public class Sample extends javax.swing.JFrame {
         btnUpdateInfo = new javax.swing.JButton();
         btnResetInfo = new javax.swing.JButton();
         btnDeleteInfo = new javax.swing.JButton();
+        maleRadioButton = new javax.swing.JRadioButton();
+        feMaleRadioButton = new javax.swing.JRadioButton();
+        subjectComboBox = new javax.swing.JComboBox<>();
+        dateChooser = new com.toedter.calendar.JDateChooser();
+        checkCodig = new javax.swing.JCheckBox();
+        checkGaming = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -117,20 +213,36 @@ public class Sample extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Name");
 
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Subject");
+
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("Date");
+
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("Gender");
+
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("Hobby");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         jPanel2Layout.setVerticalGroup(
@@ -140,7 +252,15 @@ public class Sample extends javax.swing.JFrame {
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(90, 90, 90)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(296, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(93, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addGap(68, 68, 68)
@@ -179,7 +299,7 @@ public class Sample extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 10, 350, 180));
+        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, 420, 210));
 
         btnSaveInfo.setBackground(new java.awt.Color(153, 255, 153));
         btnSaveInfo.setText("Save");
@@ -188,7 +308,7 @@ public class Sample extends javax.swing.JFrame {
                 btnSaveInfoMouseClicked(evt);
             }
         });
-        jPanel3.add(btnSaveInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 280, 110, 50));
+        jPanel3.add(btnSaveInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 320, 110, 50));
 
         btnUpdateInfo.setBackground(new java.awt.Color(102, 102, 255));
         btnUpdateInfo.setText("Update");
@@ -197,7 +317,7 @@ public class Sample extends javax.swing.JFrame {
                 btnUpdateInfoMouseClicked(evt);
             }
         });
-        jPanel3.add(btnUpdateInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 280, 110, 50));
+        jPanel3.add(btnUpdateInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 320, 110, 50));
 
         btnResetInfo.setBackground(new java.awt.Color(255, 102, 102));
         btnResetInfo.setText("Reset");
@@ -206,7 +326,7 @@ public class Sample extends javax.swing.JFrame {
                 btnResetInfoMouseClicked(evt);
             }
         });
-        jPanel3.add(btnResetInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 360, 120, 40));
+        jPanel3.add(btnResetInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 400, 120, 40));
 
         btnDeleteInfo.setBackground(java.awt.Color.red);
         btnDeleteInfo.setText("Delete");
@@ -215,21 +335,44 @@ public class Sample extends javax.swing.JFrame {
                 btnDeleteInfoMouseClicked(evt);
             }
         });
-        jPanel3.add(btnDeleteInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 360, 110, 40));
+        jPanel3.add(btnDeleteInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 400, 110, 40));
 
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, 600, 460));
+        buttonGroup1.add(maleRadioButton);
+        maleRadioButton.setText("Male");
+        jPanel3.add(maleRadioButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
+
+        buttonGroup1.add(feMaleRadioButton);
+        feMaleRadioButton.setText("Female");
+        jPanel3.add(feMaleRadioButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, -1, -1));
+
+        subjectComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<<SELECT>>", "JEE", "C#", "PHP ", "DDD" }));
+        jPanel3.add(subjectComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 170, 30));
+        jPanel3.add(dateChooser, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 170, 30));
+
+        checkCodig.setText("coding");
+        jPanel3.add(checkCodig, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, -1, -1));
+
+        checkGaming.setText("Gaming");
+        jPanel3.add(checkGaming, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 340, -1, -1));
+
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 60, 600, 460));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveInfoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveInfoMouseClicked
         // TODO add your handling code here:
-        sql = "insert into info(name,phonenumber)values (?,?)";
+        sql = "insert into info(name,phonenumber,gender,date,hobby)values (?,?,?,?,?)";
 
         try {
             ps = con.getCon().prepareStatement(sql);
             ps.setString(1, txtNameInfo.getText().trim());
             ps.setInt(2, Integer.parseInt(txtPhoneNumberInfo.getText().trim()));
+            ps.setString(3, getGenders());
+           
+            ps.setDate(4, convertDateToUtilsql(dateChooser.getDate()));
+            ps.setString(5, getHobby().toString());
+            
             ps.executeUpdate();
             ps.close();
             con.getCon().close();
@@ -278,11 +421,28 @@ public class Sample extends javax.swing.JFrame {
         String id = jTable1.getModel().getValueAt(row, 0).toString();
         String name = jTable1.getModel().getValueAt(row, 1).toString();
         String cell = jTable1.getModel().getValueAt(row, 2).toString();
+        String gender = jTable1.getModel().getValueAt(row, 3).toString();
+//        String hobby = jTable1.getModel().getValueAt(row, 4).toString();
+//        String subject = jTable1.getModel().getValueAt(row, 5).toString();
+        String date = jTable1.getModel().getValueAt(row, 4).toString();
+       
+        checkCodig.setSelected(false);
+        checkGaming.setSelected(false);
+        
+        String hobby = jTable1.getModel().getValueAt(row, 5).toString();
+        
+        if (hobby.contains("Coding")) {
+            checkCodig.setSelected(true);
+        }
+        if (hobby.contains("Gaming")) {
+            checkCodig.setSelected(true);
+        }
 
         txtIdinfo.setText(id);
         txtNameInfo.setText(name);
         txtPhoneNumberInfo.setText(cell);
-
+        
+        
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void btnResetInfoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnResetInfoMouseClicked
@@ -291,6 +451,7 @@ public class Sample extends javax.swing.JFrame {
         txtIdinfo.setText("");
         txtNameInfo.setText("");
         txtPhoneNumberInfo.setText("");
+        
     }//GEN-LAST:event_btnResetInfoMouseClicked
 
     private void btnDeleteInfoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeleteInfoMouseClicked
@@ -356,15 +517,26 @@ public class Sample extends javax.swing.JFrame {
     private javax.swing.JButton btnResetInfo;
     private javax.swing.JButton btnSaveInfo;
     private javax.swing.JButton btnUpdateInfo;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JCheckBox checkCodig;
+    private javax.swing.JCheckBox checkGaming;
+    private com.toedter.calendar.JDateChooser dateChooser;
+    private javax.swing.JRadioButton feMaleRadioButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JRadioButton maleRadioButton;
+    private javax.swing.JComboBox<String> subjectComboBox;
     private javax.swing.JTextField txtIdinfo;
     private javax.swing.JTextField txtNameInfo;
     private javax.swing.JTextField txtPhoneNumberInfo;
